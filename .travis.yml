@@ -6,7 +6,7 @@ services:
   - docker
 
 before_install:
-  - docker build -t sqaurelu/wassub-test-app -f ./Dockerfile.dev ./
+  - docker build -t sqaurelu/wassub-app -f ./Dockerfile.dev ./
   # docker build -t <docker id>/<app name> -f <Docker file 경로> <build해야할 파일들이 잇는 경로>
 
 script:
