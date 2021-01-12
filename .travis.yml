@@ -1,0 +1,40 @@
+language: generic
+
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t sqaurelu/wassub-app -f ../web-frontend/Dockerfile.dev ./web-frontend
+  # docker build -t <docker id>/<app name> -f <Docker file 경로> <build해야할 파일들이 잇는 경로>
+
+script:
+  - docker run -e CI=true sqaurelu/wassub-app npm run test
+
+after_success:
+  - docker build -t sqaurelu/docker-web-frontend ./web-frontend
+  # - docker build -t sqaurelu/docker-backend ../backend
+  # - docker build -t sqaurelu/docker-nginx ../nginx
+
+  - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_ID" --password-stdin
+
+  # docker hub에 image put
+  - docker push sqaurelu/docker-web-frontend
+#   - docker push sqaurelu/docker-backend
+#   - docker push sqaurelu/docker-nginx
+
+# deploy:
+#   provider: elasticbeanstalk
+#   region: "ap-northeast-2"
+#   app: "docker-fullstack-app"
+#   env: "DockerFullstackApp-env"
+#   bucket_name: elasticbeanstalk-ap-northeast-2-972153559337
+#   bucket_path: "docker-fullstack-app"
+#   on:
+#     branch: master
+  
+#   access_key_id: $AWS_ACCESS_KEY
+#   secret_access_key: $AWS_SECRET_ACCESS_KEY
+
+  
